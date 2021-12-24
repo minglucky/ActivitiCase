@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zioer.dao.ZzroleMapper">
+	<resultMap id="ZzroleResultMap" type="Zzrole" >
+	    <id column="role_id" property="role_id" />
+		<result column="rolename" property="rolename" />
+	</resultMap>
+	
+	<sql id="selectBaseColumn">
+		role_id,rolename
+	</sql>
+	
+	<select id="findByKey" parameterType="String" resultMap="ZzroleResultMap">
+		SELECT 
+			<include refid="selectBaseColumn"></include>
+		from
+			zz_role
+		 where role_id = #{role_id}
+	</select>
+	
+	<!-- 新增-->
+	<insert id="insertZzrole" parameterType="Zzrole">
+		
+		INSERT INTO `zz_role` 
+			(`role_id`, `rolename`) 
+		VALUES 
+			(
+			#{role_id},#{rolename}
+			)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="deleteBykey" parameterType="String">
+		delete from `zz_role`
+		where 
+			role_id = #{role_id}
+	</delete>
+	
+	<!-- 编辑-->
+	<update id="updateZzrole" parameterType="Zzrole">
+		update `zz_role` 
+		<set>
+			<if test="rolename != null">
+				rolename = #{rolename},
+			</if>
+		</set>
+		where `role_id` = #{role_id}		
+	</update>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" resultMap="ZzroleResultMap" parameterType="Zzrole">
+		SELECT 
+			<include refid="selectBaseColumn"></include>
+		from `zz_role`
+		<where>
+			<if test="role_id != null">
+				and role_id = #{role_id}
+			</if>
+			<if test="rolename != null">
+				and rolename = #{rolename}
+			</if>
+		</where>
+	</select>	
+</mapper>

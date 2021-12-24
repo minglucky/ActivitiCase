@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zioer.dao.PaicheMapper">
+	<resultMap id="PaicheResultMap" type="Paiche" >
+	    <id column="id" property="id" />
+		<result column="pid" property="pid" />
+		<result column="user_id" property="user_id" />
+		<result column="startdatetime" property="startdatetime" />
+		<result column="persons" property="persons" />
+		<result column="phone" property="phone" />
+		<result column="startposition" property="startposition" />
+		<result column="endposition" property="endposition" />
+		<result column="driver" property="driver" />
+		<result column="car" property="car" />
+		<result column="bzhu" property="bzhu" />
+		<result column="createdatetime" property="createdatetime" />
+	</resultMap>
+	
+	<sql id="selectPaicheColumn">
+		`id`,
+		`pid` ,
+		`user_id` ,
+		`startdatetime` ,
+		`persons` ,
+		`phone` ,
+		`startposition` ,
+		`endposition`,
+		`driver`,
+		`car`,
+		`bzhu` ,
+		`createdatetime` 
+	</sql>
+	
+	<select id="findByKey" parameterType="String" resultMap="PaicheResultMap">
+		SELECT 
+			<include refid="selectPaicheColumn"></include>
+		from
+			z_paiche
+		 where id = #{id}
+	</select>
+	
+	<!-- 新增-->
+	<insert id="insert" parameterType="Paiche">
+		INSERT INTO `z_paiche` 
+			(`id`, 
+			`pid`, 
+			`user_id`, 
+			`startdatetime`, 
+			`persons`, 
+			`phone` ,
+			`startposition`, 
+			`endposition`, 
+			`driver`,
+			`car`,
+			`bzhu`, 
+			`createdatetime`) 
+		VALUES 
+			(
+			#{id},#{pid},#{user_id},#{startdatetime},
+			#{persons},#{phone},#{startposition},#{endposition},
+			#{driver},#{car},#{bzhu},
+			#{createdatetime}
+			)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="deleteBykey" parameterType="String">
+		delete from `z_paiche`
+		where 
+			id = #{id}
+	</delete>
+	
+	<!-- 编辑-->
+	<update id="update" parameterType="Paiche">
+		update `z_paiche` 
+		<set>
+			<if test="pid != null">
+				pid = #{pid},
+			</if>
+			<if test="user_id != null">
+				user_id = #{user_id},
+			</if>
+			<if test="startdatetime != null">
+				startdatetime = #{startdatetime},
+			</if>
+			<if test="persons != null">
+				persons = #{persons},
+			</if>
+			<if test="phone != null">
+				phone = #{phone},
+			</if>
+			<if test="startposition != null">
+				startposition = #{startposition},
+			</if>
+			<if test="endposition != null">
+				endposition = #{endposition},
+			</if>
+			<if test="driver != null">
+				driver = #{driver},
+			</if>
+			<if test="car != null">
+				car = #{car},
+			</if>
+			<if test="bzhu != null">
+				bzhu = #{bzhu},
+			</if>
+			<if test="createdatetime != null">
+				createdatetime = #{createdatetime},
+			</if>
+		</set>
+		where `id` = #{id}		
+	</update>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" resultMap="PaicheResultMap" parameterType="Paiche">
+		SELECT 
+			<include refid="selectPaicheColumn"></include>
+		from `z_paiche`
+		<where>
+			<if test="user_id != null">
+				and user_id = #{user_id}
+			</if>
+			<if test="phone != null">
+				and phone = #{phone}
+			</if>
+			<if test="startposition != null">
+				and startposition = #{startposition}
+			</if>
+			<if test="endposition != null">
+				and endposition = #{endposition}
+			</if>
+			<if test="createdatetime != null">
+				and createdatetime = #{createdatetime}
+			</if>
+			<if test="driver != null">
+				and driver = #{driver}
+			</if>
+			<if test="car != null">
+				and car = #{car}
+			</if>
+			<if test="bzhu != null">
+				and bzhu = #{bzhu}
+			</if>
+		</where>
+		<if test="firstResult != null and maxResults != null">
+			limit #{firstResult} , #{maxResults}
+		</if>
+	</select>
+	
+</mapper>

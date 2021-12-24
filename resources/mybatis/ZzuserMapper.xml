@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zioer.dao.ZzuserMapper">
+	<resultMap id="ZzuserResultMap" type="Zzuser" >
+	    <id column="user_id" property="user_id" />
+		<result column="department_id" property="department_id" />
+		<result column="role_id" property="role_id" />
+		<result column="username" property="username" />
+		<result column="psd" property="psd" />
+		<result column="departmentname" property="departmentname" />
+		<result column="rolename" property="rolename" />
+	</resultMap>
+	
+	<sql id="selectBaseColumn">
+		user_id,a.department_id,a.role_id,username,psd,departmentname,rolename
+	</sql>
+	
+	<select id="findByKey" parameterType="String" resultMap="ZzuserResultMap">
+		SELECT 
+		<include refid="selectBaseColumn"></include>
+		from zz_user a
+		LEFT JOIN zz_role b
+		ON a.role_id = b.role_id
+		LEFT JOIN zz_department c
+		on a.department_id = c.department_id
+		where user_id = #{user_id}
+	</select>
+	
+	<!-- 新增-->
+	<insert id="insertZzuser" parameterType="Zzuser">
+		
+		INSERT INTO `zz_user` 
+			(`user_id`, `department_id`, `role_id`, `username`, `psd`) 
+		VALUES 
+			(
+			#{user_id},#{department_id},#{role_id},#{username},#{psd}
+			)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="deleteBykey" parameterType="String">
+		delete from `zz_user`
+		where 
+			user_id = #{user_id}
+	</delete>
+	
+	<!-- 编辑-->
+	<update id="updateZzuser" parameterType="Zzuser">
+		update `zz_user` 
+		<set>
+			<if test="department_id != null">
+				department_id = #{department_id},
+			</if>
+			<if test="role_id != null">
+				role_id = #{role_id},
+			</if>
+			<if test="username != null">
+				username = #{username},
+			</if>
+			<if test="psd != null">
+				psd = #{psd},
+			</if>
+		</set>
+		where `user_id` = #{user_id}		
+	</update>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" resultMap="ZzuserResultMap"  parameterType="Zzuser">
+		SELECT 
+			<include refid="selectBaseColumn"></include>
+		from zz_user a
+		LEFT JOIN zz_role b
+		ON a.role_id = b.role_id
+		LEFT JOIN zz_department c
+		on a.department_id = c.department_id
+		<where>
+			<if test="user_id != null">
+				and user_id = #{user_id}
+			</if>
+			<if test="department_id != null">
+				and a.department_id = #{department_id}
+			</if>
+			<if test="role_id != null">
+				and a.role_id = #{role_id}
+			</if>
+			<if test="username != null">
+				and username = #{username}
+			</if>
+		</where>
+		<if test="firstResult != null and maxResults != null">
+			limit #{firstResult} , #{maxResults}
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAllCount" resultType="java.lang.Long" parameterType="Zzuser">
+		SELECT 
+			count(*) as ct
+		from zz_user a
+		LEFT JOIN zz_role b
+		ON a.role_id = b.role_id
+		LEFT JOIN zz_department c
+		on a.department_id = c.department_id
+		<where>
+			<if test="user_id != null">
+				and user_id = #{user_id}
+			</if>
+			<if test="department_id != null">
+				and a.department_id = #{department_id}
+			</if>
+			<if test="role_id != null">
+				and a.role_id = #{role_id}
+			</if>
+			<if test="username != null">
+				and username = #{username}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zioer.dao.ZBeawayMapper">
+	<resultMap id="ZBeawayResultMap" type="ZBeaway" >
+	    <id column="id" property="id" />
+		<result column="pid" property="pid" />
+		<result column="paiche_id" property="paiche_id"  />
+	    <result column="user_id" property="user_id"  />
+	    <result column="username" property="username"  />
+	    <result column="sort" property="sort"  />
+	    <result column="codename" property="codename"  />
+	    <result column="startdatetime" property="startdatetime"  />
+	    <result column="enddatetime" property="enddatetime"  />
+	    <result column="phone" property="phone"  />
+	    <result column="onposition" property="onposition"  />
+	    <result column="borrowmoney" property="borrowmoney"  />
+	    <result column="bzhu" property="bzhu"  />
+	    <result column="createdatetime" property="createdatetime"  />
+	</resultMap>
+	
+	<sql id="selectBaseColumn">
+		a.id,a.pid,a.paiche_id,a.user_id,c.username,a.sort,b.codename,a.startdatetime,a.enddatetime,a.phone,a.onposition,a.borrowmoney,a.bzhu,a.createdatetime 
+	</sql>
+	
+	<select id="findByKey" parameterType="String" resultMap="ZBeawayResultMap">
+		SELECT 
+			<include refid="selectBaseColumn"></include>
+		FROM z_beaway a
+		LEFT JOIN zz_code b
+		ON a.sort = b.id
+		LEFT JOIN zz_user c
+		ON a.user_id = c.user_id
+		 where a.id = #{id}
+	</select>
+	
+	<!-- 新增-->
+	<insert id="insert" parameterType="ZBeaway">
+		INSERT INTO `z_beaway` 
+			(id, pid, paiche_id, 
+		      user_id, sort, startdatetime, 
+		      enddatetime, phone, onposition, 
+		      borrowmoney, 
+		      bzhu, createdatetime) 
+		VALUES 
+			(
+			#{id}, #{pid}, #{paiche_id}, 
+	        #{user_id}, #{sort}, #{startdatetime}, 
+	        #{enddatetime}, #{phone}, #{onposition}, 
+	        #{borrowmoney}, 
+	        #{bzhu}, #{createdatetime}
+			)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="deleteBykey" parameterType="String">
+		delete from `z_beaway`
+		where 
+			id = #{id}
+	</delete>
+	
+	<!-- 编辑-->
+	<update id="update" parameterType="ZBeaway">
+		update `z_beaway` 
+		<set>
+			  <if test="pid != null" >
+		        pid = #{pid},
+		      </if>
+		      <if test="paiche_id != null" >
+		        paiche_id = #{paiche_id},
+		      </if>
+		      <if test="user_id != null" >
+		        user_id = #{user_id},
+		      </if>
+		      <if test="sort != null" >
+		        sort = #{sort},
+		      </if>
+		      <if test="startdatetime != null" >
+		        startdatetime = #{startdatetime},
+		      </if>
+		      <if test="enddatetime != null" >
+		        enddatetime = #{enddatetime},
+		      </if>
+		      <if test="phone != null" >
+		        phone = #{phone},
+		      </if>
+		      <if test="onposition != null" >
+		        onposition = #{onposition},
+		      </if>
+		      <if test="borrowmoney != null" >
+		        borrowmoney = #{borrowmoney},
+		      </if>
+		      <if test="bzhu != null" >
+		        bzhu = #{bzhu,jdbcType=VARCHAR},
+		      </if>
+		      <if test="createdatetime != null" >
+		        createdatetime = #{createdatetime},
+		      </if>
+		</set>
+		where `id` = #{id}		
+	</update>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" resultMap="ZBeawayResultMap" parameterType="ZBeaway">
+		SELECT 
+			<include refid="selectBaseColumn"></include>
+		FROM z_beaway a
+		LEFT JOIN zz_code b
+		ON a.sort = b.id
+		LEFT JOIN zz_user c
+		ON a.user_id = c.user_id
+		<where>
+			<if test="pid != null" >
+		        and pid = #{pid}
+		      </if>
+		      <if test="paiche_id != null" >
+		        and paiche_id = #{paiche_id}
+		      </if>
+		      <if test="user_id != null" >
+		        and user_id = #{user_id}
+		      </if>
+		      <if test="sort != null" >
+		        and sort = #{sort}
+		      </if>
+		      <if test="startdatetime != null" >
+		        and startdatetime = #{startdatetime}
+		      </if>
+		      <if test="enddatetime != null" >
+		        and enddatetime = #{enddatetime}
+		      </if>
+		      <if test="phone != null" >
+		        and phone = #{phone}
+		      </if>
+		      <if test="onposition != null" >
+		        and onposition = #{onposition}
+		      </if>
+		      <if test="borrowmoney != null" >
+		        and borrowmoney = #{borrowmoney}
+		      </if>
+		      <if test="bzhu != null" >
+		        and bzhu = #{bzhu,jdbcType=VARCHAR}
+		      </if>
+		      <if test="createdatetime != null" >
+		        and createdatetime = #{createdatetime}
+		      </if>
+		</where>
+		<if test="firstResult != null and maxResults != null">
+			limit #{firstResult} , #{maxResults}
+		</if>
+	</select>
+	
+</mapper>
